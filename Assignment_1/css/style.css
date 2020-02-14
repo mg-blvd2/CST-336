@@ -1,0 +1,93 @@
+body{
+    background-color: #000080;
+}
+
+header{
+    color: #F8DE7E;
+}
+
+main{
+    color : #cc5500;
+}
+
+
+nav a{
+    color:#228b22;
+    text-decoration: none;
+    padding: 5px;
+    background-color: white;
+    border-color: black;
+    border-width: medium;
+    border-radius: 5px;
+    margin: 5px;
+    font-size: 1.8em;
+}
+
+nav a:hover{
+    background-color: gold;
+    color: blue;
+    transition: .9s;
+}
+
+header, nav, footer{
+    text-align: center;
+}
+
+main div{
+    width: 50%;
+    font-size: 1.5em;
+}
+
+.link{
+    color: #228b22;
+}
+
+#homeText{
+    float: left;
+    padding-left: 10%;
+}
+
+#homeImg{
+    float: right;
+    margin-right: 10%;
+}
+
+#dontClick{
+    color: red;
+    text-decoration: line-through;
+}
+
+#codeImg {
+    float : left;
+    padding-left: 10%;
+}
+
+#codeText{
+    float:right;
+    padding-right: 10%;
+}
+
+.disclaimerPar{
+    color: white;
+}
+
+footer{
+    clear: right;
+    color: white;
+    position: fixed;
+    bottom: 0;
+}
+
+#jsMain{
+    text-align: center;
+    float:center;
+}
+
+#jsText{
+    margin-left: 24%;
+}
+
+#phpLook{
+    color : red;
+    background-color: black;
+}
