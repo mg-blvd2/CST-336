@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title> Sign Up Page </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <link href="css/styles.css" rel="stylesheet" type="type/css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <h1 class="jumbotron bg-primary text-white"> Sign Up </h1>
+
+    <form id="signupForm" method="get" action="welcome.html">
+      <div class="input-group mb-3">
+        <div class"input-group-prepend">
+          <span class="input-group-text bg-secondary text-white" class="basic-addon1">First Name:</span>
+        </div>
+        <input type="text" name="fName" class="text-white bg-dark"><br>
+
+      </div>
+
+      <div class="input-group mb-3">
+        <div class"input-group-prepend">
+          <span class="input-group-text bg-secondary text-white" class="basic-addon1">Last Name:</span>
+        </div>
+        <input type="text" name="lName" class="text-white bg-dark"><br>
+
+      </div>
+
+      Gender:     <input type="radio" name="gender" value="m"> Male
+                  <input type="radio" name="gender" value="f"> Female <br><br>
+
+      <div class="input-group mb-3">
+        <div class"input-group-prepend">
+          <span class="input-group-text bg-secondary text-white" class="basic-addon1">Zip Code:</span>
+        </div>
+        <input type="text" name="zip" id="zip" class="text-white bg-dark"><br>
+
+      </div>
+      City:       <span id="city"></span><br>
+      Latitude:   <span id="latitude"></span><br>
+      Longitude:  <span id="longitude"></span><br><br>
+
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text bg-secondary text-white" for="state">State</label>
+        </div>
+        <select class="custom-select text-white bg-dark" id="state" name="state">
+        </select>
+      </div>
+
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text bg-secondary text-white" for="county">County</label>
+        </div>
+        <select class="custom-select text-white bg-dark" id="county" name="county">
+        </select>
+      </div>
+      <div class="input-group mb-3">
+        <div class"input-group-prepend">
+          <span class="input-group-text bg-secondary text-white" class="basic-addon1">Username:</span>
+        </div>
+        <input type="text" name="username" id="username" class="text-white bg-dark"><br>
+        <span id="usernameError"></span><br>
+      </div>
+
+
+      <div class="input-group mb-3">
+        <div class"input-group-prepend">
+          <span class="input-group-text bg-secondary text-white" class="basic-addon1">Password:</span>
+        </div>
+        <input type="password" name="password" id="password" class="text-white bg-dark"><br>
+      </div>
+
+      <div class="input-group mb-3">
+        <div class"input-group-prepend">
+          <span class="input-group-text bg-secondary text-white" class="basic-addon1">Re-Enter Password:</span>
+        </div>
+        <input type="password" name="passwordAgain" id="passwordAgain" class="text-white bg-dark"><br>
+        <span id="passwordAgainError"></span><br>
+      </div>
+
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <button class="btn btn-outline-secondary bg-warning text-dark" type="submit">Sign Up!</button>
+        </div>
+      </div>
+
+    </form>
+    <script>
+
+      var usernameAvailable = false;
+
+      //Adding every state to the dropdown menu
+      $.ajax({
+        method: "GET",
+        url: "https://itcdland.csumb.edu/~milara/ajax/states.php",
+        dataType: "json",
+        success: function(result, status) {
+          result.forEach(item => {
+            $("#state").append("<option value=" + item.usps.toLowerCase()+ "> " + item.state + " </option>");
+          });
+
+        }
+      })
+
+      //Displaying City from API typing a zip code
+      $("#zip").on("change", function(){
+
+        //alert($("#zip").val());
+        $.ajax({
+          method: "GET",
+             url: "https://itcdland.csumb.edu/~milara/ajax/cityInfoByZip.php",
+        dataType: "json",
+            data: { "zip": $("#zip").val()},
+        success: function(result,status) {
+
+             //alert(result.city);
+             $("#city").html(result.city);
+             $("#latitude").html(result.latitude);
+             $("#longitude").html(result.longitude);
+
+           }
+         });//ajax
+      })
+
+      $("#state").on("change", function(){
+
+        //alert($("#state").val());
+        $.ajax({
+          method: "GET",
+          url: "https://itcdland.csumb.edu/~milara/ajax/countyList.php",
+          dataType: "json",
+          data: { "state": $("#state").val()},
+          success: function(result, status){
+            //alert(result[0].county);
+            $("#county").html("<option> Select One </option>")
+            for(let i = 0; i < result.length; i++){
+              $("#county").append("<option>" + result[i].county + "</county>");
+            }
+          }
+        })
+      })//state
+
+      $("#username").change(function(){
+        //alert($("#username").val());
+        $.ajax({
+          method: "GET",
+          url: "https://cst336.herokuapp.com/projects/api/usernamesAPI.php",
+          dataType: "json",
+          data: { "username": $("#username").val() },
+          success: function(result, status){
+            if(result.available){
+              $("usernameError").html("Username is available!");
+              $("#usernameError").css("color", "green");
+              usernameAvailable = true;
+            }else{
+              $("#usernameError").html("Username is unavailable!");
+              $("#usernameError").css("color", "red");
+              usernameAvailable = false;
+            }
+          }
+        })
+      })//username
+
+      $("#signupForm").on("submit", function() {
+        alert("Submitting form...");
+        if(!isFormValid()){
+          event.preventDefault();
+        }
+      })
+
+      function isFormValid(){
+        isValid = true;
+        if(!usernameAvailable){
+          isValid = false;
+        }
+
+        if($("#username").val().length == 0){
+          isValid = false;
+          $("#usernameError").html("Username is required");
+        }
+
+        if($("#password").val() != $("#passwordAgain").val()){
+          $("#passwordAgainError").html("Password Mismatch!");
+          isValid = false;
+        }
+
+        if($("#password").val().length < 6){
+          $("#passwordAgainError").html("Password must be at least 6 characters long.")
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+    </script>
+
+  </body>
+</html>
